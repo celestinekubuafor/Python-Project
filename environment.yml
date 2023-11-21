@@ -3,10 +3,11 @@ dependencies:
   - python=3.10
   - pip
   - pip:
-    - pandas
+    - pandas==1.5.3
     - python-dotenv
-    - matplotlib
+    - matplotlib==3.7.1
     - streamlit
     - scikit-learn
     - boto3
+    - numpy==1.24.3
     - ipykernel
