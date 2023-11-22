@@ -5,17 +5,11 @@ import streamlit as st
 
 st.write('# Daily COVID-19 Cases and Deaths Over Time (Los Angeles County)')
 
+data = pd.read_csv('LA_County_COVID_Cases_20231018.csv')
 
-# Construct the full file path
-desktop_path = r'C:\Users\celes\Desktop'
-file_name = 'LA_County_COVID_Cases_20231018.csv'
-full_file_path = os.path.join(desktop_path, file_name)
-
-# Load your COVID-19 data into a Pandas DataFrame
-data = pd.read_csv(full_file_path)
 st.dataframe(data)
 
-# Convert the 'Date' column to datetime format
+# Convert the 'date' column to datetime format
 data['date'] = pd.to_datetime(data['date'])
 
 # Calculate daily changes for cases and deaths in Los Angeles County
@@ -24,10 +18,13 @@ data['DailyDeaths_LA'] = data['new_deaths'].diff()
 
 # Calculate the average daily percentage change over the past six months
 six_months_ago = pd.to_datetime('today') - pd.DateOffset(months=6)
-average_daily_percentage_change_LA = data[data['date'] >= six_months_ago]['DailyCases_LA'].pct_change().mean() * 100
+filtered_data = data[data['date'] >= six_months_ago]
 
-# Print the results
-print(f"Average Daily Percentage Change in Cases (Los Angeles County): {average_daily_percentage_change_LA:.2f}%")
+if not filtered_data.empty:
+    average_daily_percentage_change_LA = filtered_data['DailyCases_LA'].pct_change().mean() * 100
+    print(f"Average Daily Percentage Change in Cases (Los Angeles County): {average_daily_percentage_change_LA:.2f}%")
+else:
+    print("No data available for the last six months.")
 
 # Visualize the data
 plt.figure(figsize=(12, 8))
